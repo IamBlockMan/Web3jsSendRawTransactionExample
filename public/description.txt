@@ -1,0 +1,1 @@
+this folder to store all public available content such as css/html/images/files ... for development

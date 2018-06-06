@@ -1,0 +1,15 @@
+.env
+node_modules/
+.idea/
+/nbproject/
+/data
+/node_modules
+/npm-debug.log
+/logs/
+/media/
+/.sass-cache/
+/webs/
+/dump/
+/ngrok
+public/scss/vendors/inspius/_sprites.scss
+package-lock.json

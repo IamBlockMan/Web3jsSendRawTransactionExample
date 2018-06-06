@@ -1,0 +1,9 @@
+const topics = {
+    PoolOpened   : '0xdcc7d357d45c1ef8ea83f631028b8a569c07bc1bce302bf057b8fb3c23e81909',
+    RewardClaimed: "0x5dd59f4285b36241394b73f8f7ae03d0290b030a86803cf2562ecf33eeb617bd",
+    FixtureOpened: "0x53784f6238725dbc471cd05d304962d4d8c57fd2d0510b704175569e11223410",
+    FixtureEnded : "0x94105dd09727d6726633174a89902a6e8e596175785de861ca3db2ce351e626f",
+    BetPlaced    : "0x87b9df6fa7123c2e6044c3a3a37b4b0662c188d7a58ef86ee55067c46e4613ad",
+};
+
+module.exports = topics;
