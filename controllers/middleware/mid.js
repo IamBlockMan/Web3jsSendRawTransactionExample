@@ -1,4 +1,3 @@
-var response_code = require('../../models/response-code');
 var escapeHtml = require('escape-html');
 const {
     NODE_ENV,
@@ -12,7 +11,7 @@ module.exports = function(app) {
 		},
 		isLoggined: function(req, res, next) {
 			if (req.isAuthenticated()) {
-				return res.send({code: response_code.BAD_REQUEST});
+				return res.send({code: "BAD_REQUEST" });
 			} else {
 				return next();
 			}

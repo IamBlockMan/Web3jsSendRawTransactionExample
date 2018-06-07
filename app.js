@@ -5,7 +5,6 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const expressValidator = require('express-validator');
 const path = require('path');
-const favicon = require('serve-favicon');
 const logger = require('./utils/logger');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -29,8 +28,8 @@ app.use(expressLayouts);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({cookie: {}, secret: 'InspiusShopify12', resave: true, saveUninitialized: true})); //session secret
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 app.use(expressValidator());
 app.use(cookieParser('InspiusShopify12'));
 
@@ -44,6 +43,7 @@ else {
 app.use(express.static('webs', staticOption));
 app.use(express.static('styleguide'));
 app.use(express.static('media'));
+app.use(express.static('public'));
 //set req to local to use in ejs
 const mid = require('./controllers/middleware/mid')(app);
 app.use(mid.globalVariables);
@@ -51,7 +51,7 @@ app.use(mid.globalVariables);
 app.locals.pagingHelper = require('./commons/paging-helper');
 
 const indexRoute = require('./routes/index');
-app.use('/', indexRoute(passport));
+app.use('/', indexRoute);
 
 
 
