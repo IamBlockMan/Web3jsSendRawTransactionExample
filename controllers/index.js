@@ -1,7 +1,7 @@
 const logger			= require( './../utils/logger' );
 const request           = require( 'request');
 const moment            = require('moment');
-const wosukiJson        = require('../public/assets/contracts/WolsukiCore.json');
+const wolsukiJson        = require('../public/assets/contracts/WolsukiCore.json');
 // todo: config web3 and account
 const Web3              = require("web3");
 const solc              = require("solc");
@@ -47,44 +47,43 @@ const controller_index = {
         });
 
     },
-    renderContract: function ( req, res ) {
-        var abi = wosukiJson["abi"];
-        var bytecode = wosukiJson["bytecode"];
+    renderContract: async function ( req, res ) {
+        var abi      = wolsukiJson["abi"];
         var Contract = new web3.eth.Contract(abi, addressContract );
-        Contract.methods.payments( account ).call({}, ( err, result ) => {
-            console.log( result );
-        });
-        let encodeABI = Contract.methods.createFixture( "test", 1528433155, 1528605955 ).encodeABI();
-        web3.eth.getTransactionCount(account, (error, number) => {
-            web3.eth.getGasPrice((err, _gasPrice) => {
-                const gasPrice = _gasPrice.toString();
-                const gasPriceHex = Web3.utils.toHex(gasPrice);
-                const gasLimitHex = Web3.utils.toHex(300000);
-                const value = Web3.utils.toHex(Web3.utils.toWei('0.001', 'ether'));
-                var tra = {
-                    nonce: number,
-                    gasPrice: gasPriceHex,
-                    gasLimit: gasLimitHex,
-                    data: encodeABI,
-                    to: addressContract,
-                    from: account
-                };
+        try {
+            let encodeABI = Contract.methods.createFixture( "test", 1528433155, 1528605955 ).encodeABI();
+            let payments  = await Contract.methods.payments( account ).call();
+            let number    = await web3.eth.getTransactionCount(account);
+            let _gasPrice = await web3.eth.getGasPrice();
+            
+            let gasPriceHex   = web3.utils.toHex( _gasPrice.toString() );
+            let gasLimitHex   = web3.utils.toHex(300000);
+            let value         = web3.utils.toHex( web3.utils.toWei('0.001', 'ether') );
+            var transaction = {
+                nonce: number,
+                gasPrice: gasPriceHex,
+                gasLimit: gasLimitHex,
+                data: encodeABI,
+                to: addressContract,
+                from: account
+            };
 
-                var tx = new Tx(tra);
-                tx.sign(key);
+            var tx = new Tx( transaction );
+            tx.sign( key );
 
-                var stx = tx.serialize();
-                web3.eth.sendSignedTransaction('0x' + stx.toString('hex'))
-                    .on('transactionHash', hash => {
-                        console.log( hash );
-                    })
-                    .on('receipt', receipt => {
-                        console.log(receipt);
-                    })
-                    .on('error', console.error);
-                return res.send('123');
-            });
-        });
+            var stx = tx.serialize();
+            web3.eth.sendSignedTransaction('0x' + stx.toString('hex'))
+                .on('transactionHash', hash => {
+                    console.log( hash );
+                })
+                .on('receipt', receipt => {
+                    console.log(receipt);
+                })
+                .on('error', console.error);
+            return res.send('123');
+        } catch ( e ) {
+            console.log( e );
+        }
     }
 };
 
